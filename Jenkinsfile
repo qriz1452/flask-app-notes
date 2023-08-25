@@ -100,7 +100,7 @@ pipeline {
         stage('Docker Container Stack-Up'){
             steps{
                 script {
-                    sh "docker compose up "
+                    sh " sudo docker compose up "
                 }
             }
         }
