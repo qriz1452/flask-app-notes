@@ -5,7 +5,7 @@ def COLOR_MAP = [
 
 pipeline {
     agent {
-      label 'node-1'
+      label 'node-master'
       
     //   docker{
     //         image 'centos:7'
