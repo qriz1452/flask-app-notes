@@ -122,8 +122,7 @@ EOF
 
                     
                 sh " source ./.env"
-                // sh "sudo  docker network create notes"
-                // pipeline is failing because of this
+                sh "sudo docker network create notes > /dev/null 2>&1"
 
                     
                 
