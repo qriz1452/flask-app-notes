@@ -66,7 +66,7 @@ pipeline {
         stage('Unit Testing') {
            // agent { docker 'openjdk:7-jdk-alpine' }
             steps {
-                sh "python /flask-notes-app/test/test_unit.p"
+                sh "python /flask-notes-app/test/test_unit.py"
 
                 // Run unit tests
                 // For example: using testing frameworks like JUnit, NUnit, etc.
