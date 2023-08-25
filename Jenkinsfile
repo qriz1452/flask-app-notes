@@ -1,40 +1,119 @@
+def COLOR_MAP = [
+	'SUCCESS' : 'good',
+	'FAILURE' : 'danger',
+]
+
 pipeline {
     agent {
       label 'node-1'
+      
+    //   docker{
+    //         image 'centos:7'
+    //         args '-u root'
+    //         label 'docker2'
+    //     }
+    
+    //  docker { image 'linuxacademycontent/jenkins_pipelines' }
+    
+    //  dockerfile true
+
+        
   }
     
     stages {
+        
+        stage('Install required packages'){
+            script {
+                    def osType = ""
+                    
+                    // Determine the operating system type
+                    if (isUnix()) {
+                        osType = sh(script: "uname -s", returnStdout: true).trim()
+                    }
+                    
+                    // Install packages based on the operating system
+                    if (osType == 'Linux') {
+                        def packageManager = ""
+                        
+                        if (isUnix()) {
+                            // Determine the package manager based on the distribution
+                            if (sh(script: "command -v yum", returnStatus: true) == 0) {
+                                packageManager = 'yum'
+                            } else if (sh(script: "command -v apt-get", returnStatus: true) == 0) {
+                                packageManager = 'apt-get'
+                            }
+                        }
+                        
+                        // Install packages using the determined package manager
+                        if (packageManager == 'yum') {
+                            sh 'yum -y install python3 python3-pip  git'
+                        } else if (packageManager == 'apt-get') {
+                            sh 'apt-get update && apt-get install -y python3 python3-pip  git'
+                        }
+                    }
+                }
+        }
         stage('Checkout') {
             steps {
                 // Checkout the source code from version control
                 // For example: git checkout or svn checkout
-                sh "echo 'test step' "
+                checkout scm
             }
         }
         
         stage('Unit Testing') {
+           // agent { docker 'openjdk:7-jdk-alpine' }
             steps {
-                sh "echo 'test step'"
+                sh "python /flask-notes-app/test/test_unit.p"
 
                 // Run unit tests
                 // For example: using testing frameworks like JUnit, NUnit, etc.
+                
             }
         }
         
+        
+        stage('Build'){
+            steps{
+                sh 'echo "123 build"'
+            }
+        }
+        
+        
+        // stage('Copy artifacts'){
+        //     steps{
+        //         copyArtifacts(projectName: 'pipeline1', flatten: true)
+        //         sh 'ls *.jpg'
+        //     }
+        // }
+        
         stage('Integration Testing') {
             steps {
-                sh "echo 'test step'"
-
+                sh 'python /flask-notes-app/tests/test_integration.py'
                 // Run integration tests
                 // Set up required environment and execute tests
             }
         }
         
-        stage('System Testing') {
+        // stage('Build Docker Image') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps {
+        //         script {
+        //             app = docker.build(DOCKER_IMAGE_NAME)
+        //             app.inside {
+        //                 sh 'echo Hello, World!'
+        //             }
+        //         }
+        //     }
+        // }
+        
+        stage('System Testing for docker container') {
             steps {
                 sh "echo 'test step'"
 
-                // Run system tests
+                // Run system tests it can be for image , container or VM
                 // Set up environment, deploy application, and execute tests
             }
         }
@@ -145,21 +224,159 @@ pipeline {
                 // Perform cleanup tasks after testing
                 // Stop services, release resources, etc.
             }
+            
         }
+        
+        
+        // stage('Push Docker Image') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps {
+        //         script {
+        //             docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+        //                 app.push("${env.BUILD_NUMBER}")
+        //                 app.push("latest")
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // stage('CanaryDeploy') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     environment { 
+        //         CANARY_REPLICAS = 1
+        //     }
+        //     steps {
+        //         kubernetesDeploy(
+        //             kubeconfigId: 'kubeconfig',
+        //             configs: 'train-schedule-kube-canary.yml',
+        //             enableConfigSubstitution: true
+        //         )
+        //     }
+        // }
+        //  stage('DeployToProduction') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     environment { 
+        //         CANARY_REPLICAS = 0
+        //     }
+        //     steps {
+        //         input 'Deploy to Production?'
+        //         milestone(1)
+        //         kubernetesDeploy(
+        //             kubeconfigId: 'kubeconfig',
+        //             configs: 'train-schedule-kube-canary.yml',
+        //             enableConfigSubstitution: true
+        //         )
+        //         kubernetesDeploy(
+        //             kubeconfigId: 'kubeconfig',
+        //             configs: 'train-schedule-kube.yml',
+        //             enableConfigSubstitution: true
+        //         )
+        //     }
+        // }
+        
+        
+        
+        // stage('DeployToStaging') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+        //             sshPublisher(
+        //                 failOnError: true,
+        //                 continueOnError: false,
+        //                 publishers: [
+        //                     sshPublisherDesc(
+        //                         configName: 'staging',
+        //                         sshCredentials: [
+        //                             username: "$USERNAME",
+        //                             encryptedPassphrase: "$USERPASS"
+        //                         ], 
+        //                         transfers: [
+        //                             sshTransfer(
+        //                                 sourceFiles: 'dist/trainSchedule.zip',
+        //                                 removePrefix: 'dist/',
+        //                                 remoteDirectory: '/tmp',
+        //                                 execCommand: 'sudo /usr/bin/systemctl stop train-schedule && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /usr/bin/systemctl start train-schedule'
+        //                             )
+        //                         ]
+        //                     )
+        //                 ]
+        //             )
+        //         }
+        //     }
+        // }
+        // stage('DeployToProduction') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps {
+        //         input 'Does the staging environment look OK?'
+        //         milestone(1)
+        //         withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+        //             sshPublisher(
+        //                 failOnError: true,
+        //                 continueOnError: false,
+        //                 publishers: [
+        //                     sshPublisherDesc(
+        //                         configName: 'production',
+        //                         sshCredentials: [
+        //                             username: "$USERNAME",
+        //                             encryptedPassphrase: "$USERPASS"
+        //                         ], 
+        //                         transfers: [
+        //                             sshTransfer(
+        //                                 sourceFiles: 'dist/trainSchedule.zip',
+        //                                 removePrefix: 'dist/',
+        //                                 remoteDirectory: '/tmp',
+        //                                 execCommand: 'sudo /usr/bin/systemctl stop train-schedule && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /usr/bin/systemctl start train-schedule'
+        //                             )
+        //                         ]
+        //                     )
+        //                 ]
+        //             )
+        //         }
+        //     }
+        // }
     }
     
     post {
+        always{
+            sh 'echo "Job execution complete."'
+            
+            echo 'slack notification'
+			slackSend channel : '#flask-notes-app',
+				color : COLOR_MAP[currentBuild.currentResult],
+					message : "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More Infor at : ${env.BUILD_URL}"
+		
+        }
         success {
-            sh "echo 'test step'"
+            sh "echo 'Job Successfully Executed'"
+            sh 'echo "$BUILD_ID"'
+            sh 'echo "$BUILD_NUMBER"'
+            //archiveArtifacts artifacts: '*watermarked.jpg'
 
             // Actions to perform when the pipeline completes successfully
             // For example: sending notifications, archiving artifacts, etc.
         }
         failure {
-            sh "echo 'test step'"
+            sh 'echo "Job execution status is failed, please check error logs"'
+            sh 'echo "$BUILD_ID"'
+            sh 'echo "$BUILD_NUMBER , ${WORKSPACE}"'
 
             // Actions to perform when the pipeline fails
             // For example: sending notifications, logging errors, etc.
+        }
+        cleanup{
+            echo 'Cleaning up environment'
+            sh ' echo "if you have any cleanup required edit here" '
+            //sh 'rm -rf content-pipelines-cje-labs *.jpg'
         }
     }
 }
