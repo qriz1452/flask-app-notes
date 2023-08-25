@@ -126,6 +126,8 @@ EOF
 
                     
                     sh " source ./.env"
+                    sh "sudo  docker network create notes"
+
                     // commenting as try catch is not working
                     // try {
                     // sh "sudo  docker network create notes"
@@ -154,13 +156,13 @@ EOF
                     //         }
                     
                     
-                    def networkInspectOutput = sh(script: "sudo docker network inspect notes", returnStdout: true, returnStatus: true).trim()
-                    if (networkInspectOutput.contains("Error response from daemon: network notes not found")) {
-                        echo "The 'notes' network does not exist. Creating network..."
-                        sh "sudo docker network create notes"
-                        } else {
-                            echo "The 'notes' network already exists. Skipping network creation."
-                            }
+                    // def networkInspectOutput = sh(script: "sudo docker network inspect notes", returnStdout: true, returnStatus: true).trim()
+                    // if (networkInspectOutput.contains("Error response from daemon: network notes not found")) {
+                    //     echo "The 'notes' network does not exist. Creating network..."
+                    //     sh "sudo docker network create notes"
+                    //     } else {
+                    //         echo "The 'notes' network already exists. Skipping network creation."
+                    //         }
                 }
             }
         }
