@@ -442,9 +442,7 @@ pipeline {
 					message : "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More Infor at : ${env.BUILD_URL}"
 			
             sh ' echo "Cleaning the environment" '
-            sh " sudo docker network rm notes "
-            sh " sudo docker network rm -f notesdb "
-            sh " sudo docker network rm -f httpd-server "
+            
 			
 
 		
@@ -462,26 +460,35 @@ pipeline {
             sh 'echo "Job execution status is failed, please check error logs"'
             
             sh ' echo "if you have any cleanup required edit here" '
+            sh " sudo docker network rm -f notesdb "
+            sh " sudo docker network rm -f httpd-server "
             sh " sudo docker network rm notes "
             sh " sudo docker network rm -f notesdb "
             sh " sudo docker network rm -f httpd-server "
+            sh " sudo rm -rf /home/jenkins/workspace/BUILD_flask-app_project "
 
             // Actions to perform when the pipeline fails
             // For example: sending notifications, logging errors, etc.
         }
         aborted{
             sh ' echo "if you have any cleanup required edit here" '
+            sh " sudo docker network rm -f notesdb "
+            sh " sudo docker network rm -f httpd-server "
             sh " sudo docker network rm notes "
             sh " sudo docker network rm -f notesdb "
             sh " sudo docker network rm -f httpd-server "
+            sh " sudo rm -rf /home/jenkins/workspace/BUILD_flask-app_project "
 
             //sh 'rm -rf content-pipelines-cje-labs *.jpg'
         }
         unstable{
             sh ' echo "if you have any cleanup required edit here" '
+            sh " sudo docker network rm -f notesdb "
+            sh " sudo docker network rm -f httpd-server "
             sh " sudo docker network rm notes "
             sh " sudo docker network rm -f notesdb "
             sh " sudo docker network rm -f httpd-server "
+            sh " sudo rm -rf /home/jenkins/workspace/BUILD_flask-app_project "
 
             //sh 'rm -rf content-pipelines-cje-labs *.jpg'
         }
