@@ -113,7 +113,7 @@ pipeline {
                 try {
                     sh "sudo docker pull postgres:12.1-alpine"
 sh """
-cat >> ./.env <<EOF
+cat > ./.env <<EOF
 export DB_HOST='notesdb'
 export DB_PORT='5432'
 export DB_NAME='notes'
