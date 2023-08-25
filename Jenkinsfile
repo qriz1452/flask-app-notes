@@ -47,9 +47,9 @@ pipeline {
                         
                         // Install packages using the determined package manager
                         if (packageManager == 'yum') {
-                            sh 'yum -y install python3 python3-pip  git'
+                            sh 'sudo yum -y install python3 python3-pip  git'
                         } else if (packageManager == 'apt-get') {
-                            sh 'apt-get update && apt-get install -y python3 python3-pip  git'
+                            sh 'sudo apt-get update && apt-get install -y python3 python3-pip  git'
                         }
                     }
                 }
