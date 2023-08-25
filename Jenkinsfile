@@ -123,7 +123,9 @@ EOF
         
         stage('backend prereq'){
             steps{
-                sh "sudo docker pull postgres:12.1-alpine"
+                // sh "sudo docker pull postgres:12.1-alpine"
+                echo "Quazi@1234" | sudo -S docker pull postgres:12.1-alpine
+
                 sh "source ./.env"
                 sh "sudo docker network create notes > /dev/null 2>&1"
             }
