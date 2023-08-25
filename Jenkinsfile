@@ -123,12 +123,15 @@ EOF
         
         stage('backend prereq'){
             steps{
-                sh "sudo docker pull postgres:12.1-alpine"
+                //sh "sudo docker pull postgres:12.1-alpine"
 
                 sh "source ./.env"
-                sh "sudo docker network create notes > /dev/null 2>&1"
+                sh " docker build -t image-name:tag . "
+                sh " docker run -d -p 80:80 image-name:tag"
+                //sh "sudo docker network create notes > /dev/null 2>&1"
             }
         }
+        
         
         stage('Backend Build Image '){
             // when {
