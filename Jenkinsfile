@@ -126,7 +126,7 @@ EOF
             steps{
                 sh "sudo docker pull postgres:12.1-alpine"
                 sh "source ./.env"
-                sh "sudo docker network create notes > /dev/null 2>&1"
+                // sh "sudo docker network create notes > /dev/null 2>&1"
             }
         }
         
