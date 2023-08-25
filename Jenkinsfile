@@ -215,7 +215,7 @@ pipeline {
         
         stage('Performance Testing') {
             steps {
-                sh "echo ' Running JMeter test using the Performance Plugin's jmeter step'"
+                sh "echo ' Running JMeter test using the Performance Plugin''s jmeter step'"
                 
                // jmeter allowAbsolutePath="true", jmeterProperties: '', jtlArchive: '**/*.jtl', testFile: './test/test_performance_jmeter.jmx'
           
