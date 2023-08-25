@@ -50,9 +50,24 @@ pipeline {
                             
                             // Install packages using the determined package manager
                             if (packageManager == 'yum') {
+                                sh 'export PATH=/bin:/usr/bin:/opt/aws/bin:$PATH'
+                                sh 'export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python2.7/site-packages/"'
                                 sh 'sudo yum -y install python3 python3-pip git'
+                                sh 'yum install -y epel-release wget'
+                                sh 'wget -O /tmp/aws-cfn-bootstrap-latest.amzn1.noarch.rpm https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm'
+                                sh 'yum install -y /tmp/aws-cfn-bootstrap-latest.amzn1.noarch.rpm'
+                                sh 'yum update -y'
+                                sh 'yum install -y yum-utils device-mapper-persistent-data lvm2'
+                                sh 'yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo'
+                                sh 'yum install -y git docker-ce'
+                                sh 'export username=$(whoami)'
+                                sh 'usermod -aG docker $username'
+                                sh 'systemctl enable --now docker'
+                
+                                
                             } else if (packageManager == 'apt-get') {
                                 sh 'sudo apt-get update && apt-get install -y python3 python3-pip git'
+                                // need to add above steps for apt-get
                             }
                         }
                     } catch (Exception e) {
@@ -84,26 +99,56 @@ pipeline {
         }
         
         
-        stage('Build Docker image'){
+        
+        stage('BACKEND Image and RUN '){
+            steps{
+                script {
+                   sh """   
+                   cat > /home/cloud_user/notes/.env <<EOF
+                   export DB_HOST='notesdb'
+                   export DB_PORT='5432'
+                   export DB_NAME='notes'
+                   export DB_USERNAME='demo'
+                   export DB_PASSWORD='secure_password'
+                   export FLASK_ENV='development'
+                   export FLASK_APP='.'
+                   EOF
+                   
+                   """
+                   sh ' source /home/cloud_user/notes/.env '
+                   sh ' sudo docker network create notes '
+                   sh 'sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine'
+                   sh 'sudo  sed -ri "/python_version/d" /home/cloud_user/notes/Pipfile* '
+                   sh ' sudo sed -i "s/postgres/postgresql/g" /home/cloud_user/notes/config.py '
+                   sh 'sudo chown -R cloud_user: /home/cloud_user/notes'
+                   sh 'sudo docker pull python:3'
+                   sh "sudo docker exec -i notesdb psql postgres -U $DB_USERNAME -c 'CREATE DATABASE notes;'"
+                   
+                }
+            }
+        }
+        
+        stage('Build Docker image FRONTEND '){
             steps{
                 script {
                    // requires plugin 
                    // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
                    sh ' sudo    docker build -t flask-notes-app:latest /home/jenkins/workspace/BUILD_flask-app_project/ '
-                   
+                   sh 'sudo  docker run --rm -it --network notes -p 80:80 notesapp:latest'
                    
                 }
             }
         }
-        
-        stage('Docker Container Stack-Up'){
-            steps{
-                script {
-                    sh " sudo docker compose up "
-                }
-            }
-        }
+        // stage('Docker Container Stack-Up'){
+        //     steps{
+        //         script {
+        //             sh 'sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine '
+
+        //           // sh " sudo docker compose up "
+        //         }
+        //     }
+        // }
         
         // stage('Copy artifacts'){
         //     steps{
