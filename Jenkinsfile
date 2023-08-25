@@ -126,8 +126,8 @@ EOF
                 //sh "sudo docker pull postgres:12.1-alpine"
 
                 sh "source ./.env"
-                sh " docker build -t image-name:tag . "
-                sh " docker run -d -p 80:80 image-name:tag"
+                sh "sudo docker build -t image-name:tag . "
+                sh "sudo  docker run -d -p 80:80 image-name:tag"
                 //sh "sudo docker network create notes > /dev/null 2>&1"
             }
         }
