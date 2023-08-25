@@ -123,7 +123,7 @@ pipeline {
                 
                    sh ' source /home/jenkins/workspace/BUILD_flask-app_project/.env '
                    sh ' sudo docker network create notes '
-                   sh 'sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine'
+                   sh 'sudo docker run -d --name notesdb --network notes -p 5432:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine'
                    sh 'sudo  sed -ri "/python_version/d" /home/jenkins/workspace/BUILD_flask-app_project/Pipfile* '
                    sh ' sudo sed -i "s/postgres/postgresql/g" /home/jenkins/workspace/BUILD_flask-app_project/config.py '
                    sh 'sudo chown -R cloud_user: /home/jenkins/workspace/BUILD_flask-app_project/'
@@ -141,7 +141,7 @@ pipeline {
                    // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
                    sh ' sudo    docker build -t flask-notes-app:latest /home/jenkins/workspace/BUILD_flask-app_project/ '
-                   sh 'sudo  docker run --name httpd-server --rm -d --network notes -p 80:80 flask-notes-app:latest'
+                   sh 'sudo  docker run --name httpd-server  -d --network notes -p 80:80 flask-notes-app:latest'
                    
                 }
             }
