@@ -109,8 +109,26 @@ pipeline {
             steps{
                 script {
                     // provide your sh " "  commands
-                    sh "echo 'aaa'"
-                
+                    sh "sudo docker pull postgres:12.1-alpine"
+sh """
+cat >> ./.env <<EOF
+export DB_HOST='notesdb'
+export DB_PORT='5432'
+export DB_NAME='notes'
+export DB_USERNAME='demo'
+export DB_PASSWORD='secure_password'
+export FLASK_ENV='development'
+export FLASK_APP='.'
+EOF
+"""
+
+                    
+                sh " source ./.env"
+                try {
+                    sh "sudo  docker network create notes"
+                    }catch (Exception e) {
+                        echo "It seems  notes network is already created,  pipeline will continue. please verify manually"
+                    }
                 }
             }
         }
@@ -121,7 +139,7 @@ pipeline {
             }
             steps{
                 script {
-                    sh "echo 'aaa'"
+                    sh " sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
 
                   // requires plugin 
                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
