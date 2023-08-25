@@ -135,12 +135,23 @@ EOF
                     
                     // logic alternate to try catch
                     
-                    def networkExists = sh(script: "sudo docker network inspect notes", returnStatus: true)
-                    if (networkExists == 0) {
-                        echo "The 'notes' network already exists. Skipping network creation."
-                    } else {
+                    
+                    
+                    // def networkExists = sh(script: "sudo docker network inspect notes", returnStatus: true)
+                    // if (networkExists == 0) {
+                    //     echo "The 'notes' network already exists. Skipping network creation."
+                    // } else {
+                    //     sh "sudo docker network create notes"
+                    // }
+                    
+                    def networkInspect = sh(script: "sudo docker network inspect notes", returnStdout: true).trim()
+                    
+                    if (networkInspect.isEmpty()) {
+                        echo "The 'notes' network does not exist. Creating network..."
                         sh "sudo docker network create notes"
-                    }
+                        } else {
+                            echo "The 'notes' network already exists. Skipping network creation."
+                            }
                 }
             }
         }
