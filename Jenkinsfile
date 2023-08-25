@@ -110,7 +110,7 @@ pipeline {
                 script {
                     // provide your sh " "  commands
 
-                try {
+                
                     sh "sudo docker pull postgres:12.1-alpine"
 sh """
 cat > ./.env <<EOF
@@ -126,9 +126,20 @@ EOF
 
                     
                     sh " source ./.env"
-                    sh "sudo  docker network create notes"
-                    }catch (Exception e) {
-                        echo "It seems  notes network is already created,  pipeline will continue. please verify manually"
+                    // commenting as try catch is not working
+                    // try {
+                    // sh "sudo  docker network create notes"
+                    // }catch (Exception e) {
+                    //     echo "It seems  notes network is already created,  pipeline will continue. please verify manually"
+                    // }
+                    
+                    // logic alternate to try catch
+                    
+                    def networkExists = sh(script: "sudo docker network inspect notes", returnStatus: true)
+                    if (networkExists == 0) {
+                        echo "The 'notes' network already exists. Skipping network creation."
+                    } else {
+                        sh "sudo docker network create notes"
                     }
                 }
             }
