@@ -22,7 +22,7 @@ pipeline {
     
     stages {
         
-        stage('Install required packages'){
+        stage('Install required packages') {
             script {
                     def osType = ""
                     
