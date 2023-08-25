@@ -203,10 +203,10 @@ pipeline {
         stage('System Testing for docker container') {
             steps {
                 sh "echo ' FRONTEND SYSTEM TEST RUNNING'"
-                sh " ./test/system_test_backend.sh"
+                sh " ./test/test_system_backend.sh" 
                 
                 sh "echo ' BACKEND SYSTEM TEST RUNNING'"
-                sh " ./test/system_test_frontend.sh "
+                sh " ./test/test_system_frontend.sh "
 
                 // Run system tests it can be for image , container or VM
                 // Set up environment, deploy application, and execute tests
