@@ -203,7 +203,7 @@ pipeline {
         stage('System Testing for docker container') {
             steps {
                 sh "echo ' FRONTEND SYSTEM TEST RUNNING'"
-                " ./test/system_test_backend.sh"
+                sh " ./test/system_test_backend.sh"
                 
                 sh "echo ' BACKEND SYSTEM TEST RUNNING'"
                 sh " ./test/system_test_frontend.sh "
