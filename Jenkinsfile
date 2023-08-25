@@ -103,24 +103,26 @@ pipeline {
         stage('BACKEND Image and RUN '){
             steps{
                 script {
-                   sh """   
-                   cat > /home/cloud_user/notes/.env <<EOF
-                   export DB_HOST='notesdb'
-                   export DB_PORT='5432'
-                   export DB_NAME='notes'
-                   export DB_USERNAME='demo'
-                   export DB_PASSWORD='secure_password'
-                   export FLASK_ENV='development'
-                   export FLASK_APP='.'
-                   EOF
+                //   sh """   
+                //   cat > /home/jenkins/workspace/BUILD_flask-app_project/.env <<EOF
+                //   export DB_HOST='notesdb'
+                //   export DB_PORT='5432'
+                //   export DB_NAME='notes'
+                //   export DB_USERNAME='demo'
+                //   export DB_PASSWORD='secure_password'
+                //   export FLASK_ENV='development'
+                //   export FLASK_APP='.'
+                //   EOF
                    
-                   """
-                   sh ' source /home/cloud_user/notes/.env '
+                //   """
+                // asmit available in git
+                
+                   sh ' source /home/jenkins/workspace/BUILD_flask-app_project/.env '
                    sh ' sudo docker network create notes '
                    sh 'sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine'
-                   sh 'sudo  sed -ri "/python_version/d" /home/cloud_user/notes/Pipfile* '
-                   sh ' sudo sed -i "s/postgres/postgresql/g" /home/cloud_user/notes/config.py '
-                   sh 'sudo chown -R cloud_user: /home/cloud_user/notes'
+                   sh 'sudo  sed -ri "/python_version/d" /home/jenkins/workspace/BUILD_flask-app_project/Pipfile* '
+                   sh ' sudo sed -i "s/postgres/postgresql/g" /home/jenkins/workspace/BUILD_flask-app_project/config.py '
+                   sh 'sudo chown -R cloud_user: /home/jenkins/workspace/BUILD_flask-app_project/'
                    sh 'sudo docker pull python:3'
                    sh "sudo docker exec -i notesdb psql postgres -U $DB_USERNAME -c 'CREATE DATABASE notes;'"
                    
