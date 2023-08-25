@@ -80,6 +80,10 @@ pipeline {
         
         
         stage('Checkout') {
+            tools {
+                    // Specify the 'Default' Git installation
+                    git 'Default'
+                }
             steps {
                 // Checkout the source code from version control
                 // For example: git checkout or svn checkout
@@ -115,7 +119,7 @@ pipeline {
                 //   EOF
                    
                 //   """
-                // asmit available in git
+                // as it available in git
                 
                    sh ' source /home/jenkins/workspace/BUILD_flask-app_project/.env '
                    sh ' sudo docker network create notes '
