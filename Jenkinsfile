@@ -122,6 +122,8 @@ EOF
 
                     
                 sh " source ./.env"
+                // sh "sudo  docker network create notes"
+                // pipeline is failing because of this
 
                     
                 
@@ -133,8 +135,6 @@ EOF
             //     branch 'master'
             // }
             steps{
-                sh "sudo  docker network create notes"
-
                 sh "sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
 
                   // requires plugin 
