@@ -84,12 +84,21 @@ pipeline {
         }
         
         
-        stage('Build'){
+        stage('Build Docker image'){
             steps{
-                sh 'echo "123 build"'
+                script {
+                    dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
+                }
             }
         }
         
+        stage('Docker Container Stack-Up'){
+            steps{
+                script {
+                    sh "echo '123'"
+                }
+            }
+        }
         
         // stage('Copy artifacts'){
         //     steps{
