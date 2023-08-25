@@ -52,17 +52,17 @@ pipeline {
                             if (packageManager == 'yum') {
                                 sh 'export PATH=/bin:/usr/bin:/opt/aws/bin:$PATH'
                                 sh 'export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python2.7/site-packages/"'
-                                sh 'sudo yum -y install python3 python3-pip git'
-                                sh 'sudo yum install -y epel-release wget'
-                                sh 'sudo wget -O /tmp/aws-cfn-bootstrap-latest.amzn1.noarch.rpm https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm'
-                                sh 'sudo yum install -y /tmp/aws-cfn-bootstrap-latest.amzn1.noarch.rpm'
-                                sh 'sudo yum update -y'
-                                sh 'sudo yum install -y yum-utils device-mapper-persistent-data lvm2'
-                                sh 'sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo'
-                                sh 'sudo yum install -y git docker-ce'
-                                sh 'export username=$(whoami)'
-                                sh 'sudo usermod -aG docker $username'
-                                sh 'sudo systemctl enable --now docker'
+                                // sh 'sudo yum -y install python3 python3-pip git'
+                                // sh 'sudo yum install -y epel-release wget'
+                                // sh 'sudo wget -O /tmp/aws-cfn-bootstrap-latest.amzn1.noarch.rpm https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm'
+                                // sh 'sudo yum install -y /tmp/aws-cfn-bootstrap-latest.amzn1.noarch.rpm'
+                                // sh 'sudo yum update -y'
+                                // sh 'sudo yum install -y yum-utils device-mapper-persistent-data lvm2'
+                                // sh 'sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo'
+                                // sh 'sudo yum install -y git docker-ce'
+                                // sh 'export username=$(whoami)'
+                                // sh 'sudo usermod -aG docker $username'
+                                // sh 'sudo systemctl enable --now docker'
                 
                                 
                             } else if (packageManager == 'apt-get') {
