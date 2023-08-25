@@ -2,3 +2,6 @@ Dockerfile
 .gitignore
 Pipfile.lock
 migrations/
+Jeninsfile
+Dockerfile
+docker-compose.yml
