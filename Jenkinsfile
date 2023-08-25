@@ -137,7 +137,7 @@ pipeline {
                    // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
                    sh ' sudo    docker build -t flask-notes-app:latest /home/jenkins/workspace/BUILD_flask-app_project/ '
-                   sh 'sudo  docker run --rm -it --network notes -p 80:80 notesapp:latest'
+                   sh 'sudo  docker run --name https-server --rm -it --network notes -p 80:80 notesapp:latest'
                    
                 }
             }
@@ -436,6 +436,10 @@ pipeline {
 			slackSend channel : '#flask-notes-app',
 				color : COLOR_MAP[currentBuild.currentResult],
 					message : "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More Infor at : ${env.BUILD_URL}"
+			
+            sh ' echo "Cleaning the environment" '
+			
+
 		
         }
         success {
@@ -449,15 +453,29 @@ pipeline {
         }
         failure {
             sh 'echo "Job execution status is failed, please check error logs"'
-            sh 'echo "$BUILD_ID"'
-            sh 'echo "$BUILD_NUMBER , ${WORKSPACE}"'
+            
+            sh ' echo "if you have any cleanup required edit here" '
+            sh " sudo docker network rm notes "
+            sh " sudo docker network rm -f notesdb "
+            sh " sudo docker network rm -f httpd-server "
 
             // Actions to perform when the pipeline fails
             // For example: sending notifications, logging errors, etc.
         }
-        cleanup{
-            echo 'Cleaning up environment'
+        aborted{
             sh ' echo "if you have any cleanup required edit here" '
+            sh " sudo docker network rm notes "
+            sh " sudo docker network rm -f notesdb "
+            sh " sudo docker network rm -f httpd-server "
+
+            //sh 'rm -rf content-pipelines-cje-labs *.jpg'
+        }
+        unstable{
+            sh ' echo "if you have any cleanup required edit here" '
+            sh " sudo docker network rm notes "
+            sh " sudo docker network rm -f notesdb "
+            sh " sudo docker network rm -f httpd-server "
+
             //sh 'rm -rf content-pipelines-cje-labs *.jpg'
         }
     }
