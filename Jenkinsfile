@@ -124,7 +124,7 @@ pipeline {
                    sh ' sudo sed -i "s/postgres/postgresql/g" /home/jenkins/workspace/BUILD_flask-app_project/config.py '
                    sh 'sudo chown -R cloud_user: /home/jenkins/workspace/BUILD_flask-app_project/'
                    sh 'sudo docker pull python:3'
-                   sh 'sudo docker exec -i notesdb psql postgres -U $DB_USERNAME -c "CREATE DATABASE notes;"'
+                   sh "docker exec -i notesdb psql -U postgres -c 'CREATE DATABASE notes;'"
                    
                 }
             }
