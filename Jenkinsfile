@@ -23,7 +23,8 @@ pipeline {
     stages {
         
         stage('Install required packages') {
-            script {
+            steps {
+                script {
                     def osType = ""
                     
                     // Determine the operating system type
@@ -52,6 +53,7 @@ pipeline {
                         }
                     }
                 }
+            }
         }
         stage('Checkout') {
             steps {
