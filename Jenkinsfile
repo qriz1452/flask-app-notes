@@ -109,6 +109,8 @@ pipeline {
             steps{
                 script {
                     // provide your sh " "  commands
+
+                try {
                     sh "sudo docker pull postgres:12.1-alpine"
 sh """
 cat >> ./.env <<EOF
@@ -123,8 +125,7 @@ EOF
 """
 
                     
-                sh " source ./.env"
-                try {
+                    sh " source ./.env"
                     sh "sudo  docker network create notes"
                     }catch (Exception e) {
                         echo "It seems  notes network is already created,  pipeline will continue. please verify manually"
