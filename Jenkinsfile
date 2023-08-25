@@ -107,11 +107,7 @@ pipeline {
         
         stage('BACKEND Build and conf'){
             steps{
-                script {
-                    // provide your sh " "  commands
-
-                
-                    sh "sudo docker pull postgres:12.1-alpine"
+                sh "sudo docker pull postgres:12.1-alpine"
 sh """
 cat > ./.env <<EOF
 export DB_HOST='notesdb'
@@ -125,45 +121,11 @@ EOF
 """
 
                     
-                    sh " source ./.env"
-                    sh "sudo  docker network create notes"
+                sh " source ./.env"
+                sh "sudo  docker network create notes"
 
-                    // commenting as try catch is not working
-                    // try {
-                    // sh "sudo  docker network create notes"
-                    // }catch (Exception e) {
-                    //     echo "It seems  notes network is already created,  pipeline will continue. please verify manually"
-                    // }
                     
-                    // logic alternate to try catch
-                    
-                    
-                    
-                    // def networkExists = sh(script: "sudo docker network inspect notes", returnStatus: true)
-                    // if (networkExists == 0) {
-                    //     echo "The 'notes' network already exists. Skipping network creation."
-                    // } else {
-                    //     sh "sudo docker network create notes"
-                    // }
-                    
-                    // def networkInspect = sh(script: "sudo docker network inspect notes", returnStdout: true).trim()
-                    
-                    // if (networkInspect.isEmpty()) {
-                    //     echo "The 'notes' network does not exist. Creating network..."
-                    //     sh "sudo docker network create notes"
-                    //     } else {
-                    //         echo "The 'notes' network already exists. Skipping network creation."
-                    //         }
-                    
-                    
-                    // def networkInspectOutput = sh(script: "sudo docker network inspect notes", returnStdout: true, returnStatus: true).trim()
-                    // if (networkInspectOutput.contains("Error response from daemon: network notes not found")) {
-                    //     echo "The 'notes' network does not exist. Creating network..."
-                    //     sh "sudo docker network create notes"
-                    //     } else {
-                    //         echo "The 'notes' network already exists. Skipping network creation."
-                    //         }
-                }
+                
             }
         }
         
@@ -172,26 +134,22 @@ EOF
             //     branch 'master'
             // }
             steps{
-                script {
-                    sh " sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
+                sh "sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
 
                   // requires plugin 
                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
                   //without plugin using sh command
-                  
-                  
-                }
+                
             }
         }
         
         stage('Frontend Build and conf'){
             steps{
-                script {
-                    sh "echo 'aaa'"
+                sh "echo 'aaa'"
                     // provide your sh " "  commands
                 
-                }
+                
             }
         }
         
