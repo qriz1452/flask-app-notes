@@ -87,7 +87,12 @@ pipeline {
         stage('Build Docker image'){
             steps{
                 script {
-                    dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
+                   // requires plugin 
+                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
+                   
+                   sh '     docker build -t notesapp:multistage /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile '
+                   
+                   
                 }
             }
         }
