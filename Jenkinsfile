@@ -105,9 +105,8 @@ pipeline {
         
         
         
-        stage('BACKEND Build and conf'){
+        stage('BACKEND Build and conf .env setup'){
             steps{
-                sh "sudo docker pull postgres:12.1-alpine"
 sh """
 cat > ./.env <<EOF
 export DB_HOST='notesdb'
@@ -119,13 +118,15 @@ export FLASK_ENV='development'
 export FLASK_APP='.'
 EOF
 """
-
-                    
-                sh " source ./.env"
+    
+            }
+        }
+        
+        stage('backend prereq'){
+            steps{
+                sh "sudo docker pull postgres:12.1-alpine"
+                sh "source ./.env"
                 sh "sudo docker network create notes > /dev/null 2>&1"
-
-                    
-                
             }
         }
         
@@ -134,7 +135,8 @@ EOF
             //     branch 'master'
             // }
             steps{
-                sh "sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
+                sh "echo 'why it WORKS' "
+                //sh "sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
 
                   // requires plugin 
                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
