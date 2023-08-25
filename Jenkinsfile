@@ -96,6 +96,8 @@ pipeline {
           // agent { docker 'openjdk:7-jdk-alpine' }
             steps {
                 sh "python ./test/test_unit.py"
+                sh "sudo docker network create notes > /dev/null 2>&1"
+                sh "sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine"
 
                 // Run unit tests
                 // For example: using testing frameworks like JUnit, NUnit, etc.
