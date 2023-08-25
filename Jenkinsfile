@@ -90,7 +90,7 @@ pipeline {
                    // requires plugin 
                    // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
-                   sh ' sudo    docker build -t flask-notes-app:${BUILD_NUMBER}-${env.BUILD_ID} /home/jenkins/workspace/BUILD_flask-app_project/ '
+                   sh ' sudo    docker build -t flask-notes-app:latest /home/jenkins/workspace/BUILD_flask-app_project/ '
                    
                    
                 }
