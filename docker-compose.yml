@@ -5,6 +5,14 @@ services:
     image: flask-notes-app:latest
     ports:
       - "80:80"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - FLASK_ENV=${FLASK_ENV}
+      - FLASK_APP=${FLASK_APP}
     networks:
       - notes
     depends_on:
@@ -14,13 +22,18 @@ services:
   postgres:
     image: postgres:12-alpine
     environment:
-      POSTGRES_DB: notesdb
-      POSTGRES_USER: notesuser
-      POSTGRES_PASSWORD: notespassword
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - notes
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USERNAME}", "-d", "${DB_NAME}", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   notes:
