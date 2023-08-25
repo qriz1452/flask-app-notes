@@ -141,7 +141,7 @@ pipeline {
                    // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
                    sh ' sudo    docker build -t flask-notes-app:latest /home/jenkins/workspace/BUILD_flask-app_project/ '
-                   sh 'sudo  docker run --name httpd-server  -d --network notes -p 80:80 flask-notes-app:latest'
+                   sh ' sudo  docker run -d  --name httpd-server  --network notes -p 80:80 flask-notes-app:latest '
                    
                 }
             }
