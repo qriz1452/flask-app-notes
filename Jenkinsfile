@@ -18,7 +18,7 @@ pipeline {
     //  dockerfile true
 
         
-  }
+    }
     
     stages {
         
@@ -108,7 +108,7 @@ pipeline {
             steps{
                 script {
                     // provide your sh " "  commands
-                    
+                    sh "echo 'aaa'"
                 
                 }
             }
@@ -120,6 +120,8 @@ pipeline {
             }
             steps{
                 script {
+                    sh "echo 'aaa'"
+
                   // requires plugin 
                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
@@ -133,6 +135,7 @@ pipeline {
         stage('Frontend Build and conf'){
             steps{
                 script {
+                    sh "echo 'aaa'"
                     // provide your sh " "  commands
                 
                 }
@@ -145,6 +148,7 @@ pipeline {
             }
             steps{
                 script {
+                    sh "echo 'aaa'"
                   // requires plugin 
                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
@@ -158,6 +162,7 @@ pipeline {
         stage('BACKEND Docker Container'){
             steps{
                 script {
+                    sh "echo 'aaa'"
                     // provide your sh " "  commands
                 
                 }
@@ -167,6 +172,7 @@ pipeline {
         stage('frontend  Docker Container '){
             steps{
                 script {
+                    sh "echo 'aaa'"
                   // requires plugin 
                   // dockerImage = docker.build('notesapp:latest', '-f /home/jenkins/workspace/BUILD_flask-app_project/Dockerfile /home/jenkins/workspace/BUILD_flask-app_project')
                    
