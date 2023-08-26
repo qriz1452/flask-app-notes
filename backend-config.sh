@@ -18,3 +18,5 @@ sudo source ./.env
 sudo sed -ri '/python_version/d' ./Pipfile*
 sudo sed -i 's/postgres/postgresql/g' ./config.py
 
+sudo docker network create notes
+
