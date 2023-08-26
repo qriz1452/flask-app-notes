@@ -14,11 +14,7 @@ export FLASK_ENV='development'
 export FLASK_APP='.'
 EOF
 sudo source ./.env
-sudo docker network create notes
-sudo docker run -d --name notesdb --network notes -p $DB_PORT:5432 -e POSTGRES_USER=$DB_USERNAME -e POSTGRES_PASSWORD=$DB_PASSWORD --restart always postgres:12.1-alpine
 
 sudo sed -ri '/python_version/d' ./Pipfile*
 sudo sed -i 's/postgres/postgresql/g' ./config.py
 
-sudo docker pull python:3
-sudo docker exec -i notesdb psql postgres -U $DB_USERNAME -c 'CREATE DATABASE notes;'
